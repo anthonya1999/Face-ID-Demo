@@ -64,11 +64,19 @@
 				922CAE161F7200E2004CCF82 /* ViewController.m */,
 				922CAE181F7200E2004CCF82 /* Main.storyboard */,
 				922CAE1D1F7200E2004CCF82 /* LaunchScreen.storyboard */,
+				92EAF2861F76F2FB00BFE332 /* Supporting Files */,
+			);
+			path = "Face ID";
+			sourceTree = "<group>";
+		};
+		92EAF2861F76F2FB00BFE332 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				922CAE1B1F7200E2004CCF82 /* Assets.xcassets */,
 				922CAE201F7200E2004CCF82 /* Info.plist */,
 				922CAE211F7200E2004CCF82 /* main.m */,
 			);
-			path = "Face ID";
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

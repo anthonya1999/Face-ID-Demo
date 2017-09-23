@@ -14,6 +14,8 @@
 @implementation ViewController
 
 - (IBAction)showFaceID:(UIButton *)button {
+    BOOL (*objc_msgSendBool)(id self, SEL _cmd) = dlsym(RTLD_DEFAULT, "objc_msgSend");
+    
     void *PreferencesUI = dlopen("/System/Library/PrivateFrameworks/PreferencesUI.framework/PreferencesUI", RTLD_LAZY);
     NSParameterAssert(PreferencesUI);
     
@@ -24,13 +26,16 @@
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissController)];
     [settingsPearlVC.navigationItem setRightBarButtonItem:doneButton];
     
-    /* Just switch between enrolled/not enrolled view */
-    Method isEnrolled_original = class_getInstanceMethod([settingsPearlVC class], sel_getUid("isEnrolled"));
-    NSParameterAssert(isEnrolled_original);
-    Method isEnrolled_override = class_getInstanceMethod([self class], @selector(isEnrolled_override));
-    NSParameterAssert(isEnrolled_override);
-    method_exchangeImplementations(isEnrolled_original, isEnrolled_override);
-
+    _faceIsEnrolled = objc_msgSendBool(settingsPearlVC, sel_getUid("isEnrolled"));
+    
+    if (!_faceIsEnrolled) {
+        Method isEnrolled_original = class_getInstanceMethod([settingsPearlVC class], sel_getUid("isEnrolled"));
+        NSParameterAssert(isEnrolled_original);
+        Method isEnrolled_override = class_getInstanceMethod([self class], @selector(isEnrolled_override));
+        NSParameterAssert(isEnrolled_override);
+        method_exchangeImplementations(isEnrolled_original, isEnrolled_override);
+    }
+    
     UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:settingsPearlVC];
     [self presentViewController:navVC animated:YES completion:nil];
     
@@ -38,7 +43,9 @@
 }
 
 - (void)dismissController {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        _faceIsEnrolled = NO;
+    }];
 }
 
 - (BOOL)isEnrolled_override {
