@@ -9,16 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-static BOOL _faceIsEnrolled = NO;
-
 @interface ViewController : UIViewController
 
-- (BOOL)isEnrolled_override;
-
 @end
 
-@interface AVCaptureVideoPreviewLayer (Private)
-
-- (void)setVideoPreviewFilters:(id)filters;
-
-@end
